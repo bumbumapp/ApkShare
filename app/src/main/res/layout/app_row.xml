@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardUseCompatPadding="true"
     app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="3dp"
     android:id="@+id/app_row">
 
@@ -30,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/app_name"
+            android:textColor="@color/default_white"
             android:layout_toRightOf="@id/app_icon"
             android:layout_toEndOf="@id/app_icon"
             android:layout_alignParentTop="true"
@@ -38,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/apk_size"
+            android:textColor="@color/default_white"
             android:layout_toRightOf="@id/app_icon"
             android:layout_toEndOf="@id/app_icon"
             android:layout_below="@id/app_name"/>

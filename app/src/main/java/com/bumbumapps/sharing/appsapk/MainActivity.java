@@ -1,19 +1,20 @@
-package com.developer.arsltech.shareapk;
+package com.bumbumapps.sharing.appsapk;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.widget.LinearLayout;
+
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -21,13 +22,15 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     List<App> apps = new ArrayList<>();
     RecyclerView recyclerView;
+    AdView adView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.app_list);
-
+        adView=findViewById(R.id.adView);
+        loadbannerads();
          //Get App List
         PackageManager pm  = getApplicationContext().getPackageManager();
         List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
@@ -69,4 +72,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+    private void loadbannerads() {
+        adView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+    }
+
 }

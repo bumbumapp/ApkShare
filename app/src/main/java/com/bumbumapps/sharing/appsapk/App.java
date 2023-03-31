@@ -1,4 +1,4 @@
-package com.developer.arsltech.shareapk;
+package com.bumbumapps.sharing.appsapk;
 
 import android.graphics.drawable.Drawable;
 
