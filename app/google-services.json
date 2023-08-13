@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "887660065361",
+    "project_id": "apkshare-87e8c",
+    "storage_bucket": "apkshare-87e8c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887660065361:android:d5e2d98d7eedc93c77fe70",
+        "android_client_info": {
+          "package_name": "com.bumbumapps.sharing.appsapk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "887660065361-a6q9o5vcipdakp51om137i66ohm24ps2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvkkAROj5AykbyTDJY1Rrq24aloUdW4fM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "887660065361-a6q9o5vcipdakp51om137i66ohm24ps2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

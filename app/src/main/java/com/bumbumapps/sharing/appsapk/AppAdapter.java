@@ -1,5 +1,7 @@
 package com.bumbumapps.sharing.appsapk;
 
+import static com.bumbumapps.sharing.appsapk.AdsLoader.mInterstitialAd;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -33,7 +35,6 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
 
     Context context;
     List<App> apps;
-    InterstitialAd mInterstitialAd;
 
 
     public AppAdapter(Context context, List<App> apps) {
@@ -58,25 +59,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
         holder.apkSize.setText(getHumanReadableSize(apkSize));
         holder.appIcon.setImageDrawable(apps.get(position).getIcon());
 
-        AdRequest adRequest = new AdRequest.Builder().build();
 
-        InterstitialAd.load(context, "ca-app-pub-8444865753152507/8324597058", adRequest,
-                new InterstitialAdLoadCallback() {
-                    @Override
-                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                        // The mInterstitialAd reference will be null until
-                        // an ad is loaded.
-                        mInterstitialAd = interstitialAd;
-                        Log.i("TAG", "onAdLoaded");
-                    }
-
-                    @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                        // Handle the error
-                        Log.i("TAG", loadAdError.getMessage());
-                        mInterstitialAd = null;
-                    }
-                });
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override

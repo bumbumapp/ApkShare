@@ -12,6 +12,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,10 +28,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         recyclerView = findViewById(R.id.app_list);
         adView=findViewById(R.id.adView);
         loadbannerads();
+        AdsLoader.loadInterstitial(this);
          //Get App List
         PackageManager pm  = getApplicationContext().getPackageManager();
         List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
