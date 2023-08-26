@@ -7,30 +7,63 @@
     android:layout_height="match_parent"
     style="@style/AppTheme"
     tools:context=".MainActivity">
-<androidx.appcompat.widget.Toolbar
-    android:layout_width="match_parent"
-    android:id="@+id/toolbar"
-    android:background="@color/white"
-    android:layout_height="wrap_content"
-    app:layout_constraintTop_toTopOf="parent"
-    android:tooltipText="@string/toolbartext"
-    app:titleTextColor="@color/default_white"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    >
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:textColor="@color/default_white"
-        android:textSize="19sp"
-        android:text="@string/toolbartext"/>
 
-</androidx.appcompat.widget.Toolbar>
+
+    <RelativeLayout
+        android:id="@+id/rela"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:id="@+id/toolbar"
+            android:background="@color/white"
+            android:layout_height="wrap_content"
+            android:tooltipText="@string/toolbartext"
+            app:titleTextColor="@color/default_white"
+
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/default_white"
+                android:textSize="19sp"
+                android:text="@string/toolbartext"/>
+
+            <ImageView
+                android:id="@+id/search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                app:tint="#ffffff"
+                android:layout_gravity="end|center_vertical"
+                android:src="@drawable/baseline_search_24"/>
+
+
+        </androidx.appcompat.widget.Toolbar>
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:tooltipText="Search"
+            android:visibility="gone"
+            android:focusable="true"
+            android:focusedByDefault="true"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+
+    </RelativeLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/rela"
         app:layout_constraintBottom_toTopOf="@+id/adView"
         android:id="@+id/app_list"/>
     <com.google.android.gms.ads.AdView
@@ -42,4 +75,7 @@
         ads:layout_constraintBottom_toBottomOf="parent"
         ads:adUnitId="ca-app-pub-8444865753152507/7542639051">
     </com.google.android.gms.ads.AdView>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -37,12 +37,17 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
     List<App> apps;
 
 
-    public AppAdapter(Context context, List<App> apps) {
+    public AppAdapter(Context context) {
         this.context = context;
-        this.apps = apps;
     }
 
-    @NonNull
+    void setApps(List<App> apps){
+        this.apps = apps;
+        notifyDataSetChanged();
+
+    }
+
+
     @Override
     public AppViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.app_row,parent,false);
@@ -51,13 +56,13 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull AppViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-
         holder.appName.setText(apps.get(position).getName());
 
         long apkSize = apps.get(position).getApkSize();
 
         holder.apkSize.setText(getHumanReadableSize(apkSize));
         holder.appIcon.setImageDrawable(apps.get(position).getIcon());
+
 
 
 
