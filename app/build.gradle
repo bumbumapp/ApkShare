@@ -1,45 +1,66 @@
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'com.google.gms.google-services'
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
+
 android {
-    compileSdkVersion 33
-    buildToolsVersion "29.0.3"
+    namespace 'com.bumbumapps.sharing.appsapk'
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.bumbumapps.sharing.appsapk"
-        minSdkVersion 26
-        targetSdkVersion 33
-        versionCode 7
-        versionName "4.1.2"
+        minSdk 26
+        targetSdk 36
+        versionCode 9
+        versionName "4.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    buildFeatures {
+        buildConfig true
     }
 
     buildTypes {
+        debug {
+            // Google test ads in debug builds.
+            manifestPlaceholders = [admobAppId: "ca-app-pub-3940256099942544~3347511713"]
+            resValue "string", "admob_banner_id", "ca-app-pub-3940256099942544/9214589741"
+            resValue "string", "admob_interstitial_id", "ca-app-pub-3940256099942544/1033173712"
+        }
         release {
+            manifestPlaceholders = [admobAppId: "ca-app-pub-8444865753152507~8492118014"]
+            resValue "string", "admob_banner_id", "ca-app-pub-8444865753152507/7542639051"
+            resValue "string", "admob_interstitial_id", "ca-app-pub-8444865753152507/8324597058"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    lint {
+        abortOnError false
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation 'androidx.recyclerview:recyclerview:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.8.0'
+    implementation 'androidx.activity:activity:1.13.0'
+    implementation 'androidx.core:core:1.17.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.6.1'
-    implementation 'com.google.android.gms:play-services-ads:22.2.0'
-    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+    implementation 'com.google.android.material:material:1.14.0'
+    implementation 'com.google.android.gms:play-services-ads:25.5.0'
+    implementation 'com.google.android.ump:user-messaging-platform:4.0.0'
+    implementation platform('com.google.firebase:firebase-bom:35.1.0')
     implementation 'com.google.firebase:firebase-crashlytics'
-    implementation "io.reactivex.rxjava2:rxjava:2.2.7"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.21"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
 }
