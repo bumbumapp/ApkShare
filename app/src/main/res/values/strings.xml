@@ -6,4 +6,5 @@
     <string name="app_size_mib">%1$.2f MiB</string>
     <string name="app_size_gib">%1$.2f GiB</string>
     <string name="toolbartext">Share APK</string>
+    <string name="privacy_options">Privacy options</string>
 </resources>
