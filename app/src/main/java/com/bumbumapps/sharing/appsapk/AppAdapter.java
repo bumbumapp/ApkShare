@@ -1,9 +1,9 @@
 package com.bumbumapps.sharing.appsapk;
 
-import static com.bumbumapps.sharing.appsapk.AdsLoader.mInterstitialAd;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -55,7 +56,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AppViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+    public void onBindViewHolder(@NonNull AppViewHolder holder, int position) {
         holder.appName.setText(apps.get(position).getName());
 
         long apkSize = apps.get(position).getApkSize();
@@ -66,95 +67,51 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
 
 
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mInterstitialAd != null) {
-                    mInterstitialAd.show((Activity) context);
-                    mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
-                        @Override
-                        public void onAdDismissedFullScreenContent() {
-                            Intent shareAPkIntent = new Intent();
-                            shareAPkIntent.setAction(Intent.ACTION_SEND);
-
-                            shareAPkIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(
-                                    context, BuildConfig.APPLICATION_ID + ".provider", new File(apps.get(position).getApkPath())
-                            ));
-
-                            shareAPkIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            shareAPkIntent.setType("application/vnd.android.package-archive");
-
-                            context.startActivity(Intent.createChooser(shareAPkIntent, "Share APK"));
-
-                            Log.d("TAG", "The ad was dismissed.");
-                        }
-
-                        @Override
-                        public void onAdFailedToShowFullScreenContent(AdError adError) {
-                            // Called when fullscreen content failed to show.
-                            Log.d("TAG", "The ad failed to show.");
-                        }
-
-                        @Override
-                        public void onAdShowedFullScreenContent() {
-                            // Called when fullscreen content is shown.
-                            // Make sure to set your reference to null so you don't
-                            // show it a second time.
-                            mInterstitialAd = null;
-                            Log.d("TAG", "The ad was shown.");
-                        }
-                    });
-                }
-                else {
-                    Intent shareAPkIntent = new Intent();
-                    shareAPkIntent.setAction(Intent.ACTION_SEND);
-
-                    shareAPkIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(
-                            context, BuildConfig.APPLICATION_ID + ".provider", new File(apps.get(position).getApkPath())
-                    ));
-
-                    shareAPkIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    shareAPkIntent.setType("application/vnd.android.package-archive");
-
-                    context.startActivity(Intent.createChooser(shareAPkIntent, "Share APK"));
-
-                }
+        holder.cardView.setOnClickListener(view -> {
+            int pos = holder.getBindingAdapterPosition();
+            if (pos == RecyclerView.NO_POSITION || apps == null || pos >= apps.size()) {
+                return;
+            }
+            final String apkPath = apps.get(pos).getApkPath();
+            if (context instanceof Activity) {
+                // Natural break point: frequency-capped interstitial, then share.
+                InterstitialHelper.showIfReady((Activity) context, () -> shareApk(apkPath));
+            } else {
+                shareApk(apkPath);
             }
         });
 
     }
 
+    private void shareApk(String apkPath) {
+        if (apkPath == null) {
+            return;
+        }
+        try {
+            Intent shareAPkIntent = new Intent(Intent.ACTION_SEND);
+            shareAPkIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(
+                    context, BuildConfig.APPLICATION_ID + ".provider", new File(apkPath)));
+            shareAPkIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            shareAPkIntent.setType("application/vnd.android.package-archive");
+            context.startActivity(Intent.createChooser(shareAPkIntent, "Share APK"));
+        } catch (IllegalArgumentException | ActivityNotFoundException e) {
+            Log.w("AppAdapter", "Unable to share " + apkPath, e);
+            Toast.makeText(context, "Unable to share this app", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     private String getHumanReadableSize(long apkSize) {
-
-        String humanReadableSize;
-        if(apkSize<1024){
-            humanReadableSize = String.format(
-                    context.getString(R.string.app_size_b),
-                    (double) apkSize
-            );
-        } else if(apkSize < Math.pow(1024,2)){
-            humanReadableSize = String.format(
-                    context.getString(R.string.app_size_kib),
-                    (double) (apkSize/1024)
-            );
-        }else if(apkSize < Math.pow(1024,3)){
-            humanReadableSize = String.format(
-                    context.getString(R.string.app_size_mib),
-                    (double) (apkSize/Math.pow(1024,2))
-            );
-        } else{
-            humanReadableSize = String.format(
-                    context.getString(R.string.app_size_gib),
-                    (double) (apkSize/Math.pow(1024,3))
-            );
-        }
-        return humanReadableSize;
+        return AppUtils.formatSize(apkSize,
+                context.getString(R.string.app_size_b),
+                context.getString(R.string.app_size_kib),
+                context.getString(R.string.app_size_mib),
+                context.getString(R.string.app_size_gib));
     }
 
     @Override
     public int getItemCount() {
-        return apps.size();
+        return apps == null ? 0 : apps.size();
     }
 
     @Override

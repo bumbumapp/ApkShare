@@ -1,6 +1,10 @@
 package com.bumbumapps.sharing.appsapk;
 
+import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.SystemBarStyle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -8,13 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
@@ -34,6 +38,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
+import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,12 +52,16 @@ public class MainActivity extends AppCompatActivity {
     private final List<App> filteredApps = new ArrayList<>() ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EdgeToEdge.enable(this, SystemBarStyle.dark(Color.TRANSPARENT), SystemBarStyle.dark(Color.TRANSPARENT));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        EdgeToEdgeInsets.applySystemBarPadding(findViewById(R.id.root));
 
+        // Errors emitted after the subscription is disposed (e.g. activity closed while loading)
+        // must not crash the app with UndeliverableException.
+        RxJavaPlugins.setErrorHandler(e -> Log.w("MainActivity", "Undeliverable Rx error", e));
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
         recyclerView = findViewById(R.id.app_list);
-        adView=findViewById(R.id.adView);
         searchView = findViewById(R.id.searchView);
         appAdapter = new AppAdapter(this);
         recyclerView.setAdapter(appAdapter);
@@ -70,6 +79,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         searchApps();
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (searchView.getVisibility() == View.VISIBLE) {
+                    searchView.setQuery("", false);
+                    searchView.setVisibility(View.GONE);
+                    findViewById(R.id.toolbar).setVisibility(View.VISIBLE);
+                    appAdapter.setApps(apps);
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
@@ -123,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-
+                Log.e("MainActivity", "Failed to load installed apps", e);
             }
 
             @Override
@@ -135,8 +158,23 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        AdsLoader.loadInterstitial(this);
-        loadbannerads();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.inflateMenu(R.menu.main_menu);
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_privacy) {
+                AdsConsent.showPrivacyOptions(this);
+                return true;
+            }
+            return false;
+        });
+        AdsConsent.gather(this, () -> {
+            toolbar.getMenu().findItem(R.id.action_privacy)
+                    .setVisible(AdsConsent.isPrivacyOptionsRequired(this));
+            if (adView == null) {
+                adView = BannerHelper.load(this, findViewById(R.id.adContainer));
+            }
+            InterstitialHelper.preload(this);
+        });
 
 
     }
@@ -150,63 +188,21 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                // Filter synchronously on the main thread: the list is small and this avoids
+                // concurrent modification of filteredApps by overlapping background queries.
                 filteredApps.clear();
-                if (newText != null){
-                     Observable.
-                            fromIterable(apps)
-                             .filter(new Predicate<App>() {
-                                @Override
-                                public boolean test(App app) throws Exception {
-                                    return app.getName().contains(newText);
-                                }
-                            })
-                            .subscribeOn(Schedulers.io())
-                             .observeOn(AndroidSchedulers.mainThread())
-                             .subscribe(new Observer<App>() {
-                                 @Override
-                                 public void onSubscribe(Disposable d) {
-                                     compositeDisposable.add(d);
-                                     Log.d("onSubscribe","onSubscribe");
-                                 }
-
-                                 @Override
-                                 public void onNext(App app) {
-                                     filteredApps.add(app);
-                                     appAdapter.setApps(filteredApps);
-                                     appAdapter.notifyDataSetChanged();
-                                     Log.d("onSubscribe","onNext");
-                                 }
-
-                                 @Override
-                                 public void onError(Throwable e) {
-                                     Log.d("onSubscribe","Throwable");
-                                 }
-
-                                 @Override
-                                 public void onComplete() {
-                                     Log.d("onSubscribe","onComplete");
-                                     if (filteredApps.isEmpty()){
-                                         appAdapter.setApps(apps);
-                                         appAdapter.notifyDataSetChanged();
-                                     }
-
-                                 }
-                             });
-                }
-
+                filteredApps.addAll(AppUtils.filterByName(apps, newText));
+                appAdapter.setApps(filteredApps);
                 return false;
             }
         });
     }
 
-    private void loadbannerads() {
-        adView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
-    }
-
     @Override
     protected void onDestroy() {
+        if (adView != null) {
+            adView.destroy();
+        }
         super.onDestroy();
         if (compositeDisposable!=null)
             compositeDisposable.dispose();
