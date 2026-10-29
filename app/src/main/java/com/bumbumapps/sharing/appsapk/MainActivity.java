@@ -221,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
                     apps.clear();
                     apps.addAll(list);
                     loaded = true;
+                    header.findViewById(R.id.loading).setVisibility(View.GONE);
                     int mine = AppUtils.countUserApps(apps);
                     ((TextView) header.findViewById(R.id.hero_sub)).setText(
                             getResources().getQuantityString(R.plurals.hero_sub, mine, mine));

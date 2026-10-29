@@ -210,6 +210,17 @@
             android:textAppearance="@style/Bento.Text.BodySmall" />
     </LinearLayout>
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:indeterminate="true"
+        app:indicatorColor="?attr/colorPrimary"
+        app:trackColor="?attr/colorSurfaceContainerHigh"
+        app:trackCornerRadius="4dp"
+        app:trackThickness="6dp" />
+
     <TextView
         android:id="@+id/empty"
         android:layout_width="match_parent"
