@@ -7,4 +7,39 @@
     <string name="app_size_gib">%1$.2f GiB</string>
     <string name="toolbartext">Share APK</string>
     <string name="privacy_options">Privacy options</string>
+
+    <string name="greeting_morning">Good morning</string>
+    <string name="greeting_afternoon">Good afternoon</string>
+    <string name="greeting_evening">Good evening</string>
+    <string name="home_title">Share any app</string>
+    <string name="search">Search apps</string>
+    <string name="search_hint">Search by app name</string>
+    <string name="more_options">More options</string>
+    <string name="hero_title">Send an APK in one tap</string>
+    <string name="hero_sub_loading">Reading your apps…</string>
+    <plurals name="hero_sub">
+        <item quantity="one">%d app on this phone · share or save it</item>
+        <item quantity="other">%d apps on this phone · share or save them</item>
+    </plurals>
+    <string name="filter_user">My apps</string>
+    <string name="filter_system">System</string>
+    <string name="filter_all">All</string>
+    <string name="sort_largest">Largest first</string>
+    <string name="section_user">Installed by you</string>
+    <string name="section_system">System apps</string>
+    <string name="section_all">All apps</string>
+    <plurals name="section_count">
+        <item quantity="one">%d app</item>
+        <item quantity="other">%d apps</item>
+    </plurals>
+    <string name="empty_list">No apps match your search.</string>
+    <string name="row_meta">%1$s · v%2$s</string>
+    <string name="action_share">Share APK</string>
+    <string name="action_save">Save APK</string>
+    <string name="action_info">App info</string>
+    <string name="split_note">This app is installed from several parts. Only its main APK is shared or saved, so it may not install on its own on another phone.</string>
+    <string name="saved_ok">Saved %1$s</string>
+    <string name="save_failed">Could not save this APK</string>
+    <string name="share_failed">Unable to share this app</string>
+    <string name="share_chooser">Share APK</string>
 </resources>

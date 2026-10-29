@@ -20,16 +20,23 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
  */
 public final class InterstitialHelper {
 
-    public static final long MIN_INTERVAL_MS = 60_000L;
+    /** At most one interstitial per 10 minutes, shown only after a finished share/save. */
+    public static final long MIN_INTERVAL_MS = 10 * 60_000L;
+    /** No interstitial in the first 3 minutes after the app starts. */
+    public static final long FIRST_OPEN_GRACE_MS = 3 * 60_000L;
 
     private static InterstitialAd interstitialAd;
     private static boolean loading;
     private static long lastShownAt = -MIN_INTERVAL_MS;
+    private static long startedAt = -1;
 
     private InterstitialHelper() {
     }
 
     public static void preload(Context context) {
+        if (startedAt < 0) {
+            startedAt = SystemClock.elapsedRealtime();
+        }
         if (interstitialAd != null || loading || !AdsConsent.canRequestAds(context)) {
             return;
         }
@@ -51,14 +58,17 @@ public final class InterstitialHelper {
     }
 
     /** Pure frequency-cap rule, unit tested. */
-    static boolean capAllows(long now, long lastShown) {
-        return now - lastShown >= MIN_INTERVAL_MS;
+    static boolean capAllows(long now, long lastShown, long appStart) {
+        return now - lastShown >= MIN_INTERVAL_MS && now - appStart >= FIRST_OPEN_GRACE_MS;
     }
 
     public static void showIfReady(Activity activity, Runnable next) {
         final Runnable after = next != null ? next : () -> { };
         long now = SystemClock.elapsedRealtime();
-        if (interstitialAd == null || activity == null || activity.isFinishing() || !capAllows(now, lastShownAt)) {
+        if (startedAt < 0) {
+            startedAt = now;
+        }
+        if (interstitialAd == null || activity == null || activity.isFinishing() || !capAllows(now, lastShownAt, startedAt)) {
             if (activity != null) {
                 preload(activity);
             }

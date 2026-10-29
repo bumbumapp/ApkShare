@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="20dp"
+    android:paddingTop="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/greeting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Bento.Text.Greeting"
+                android:text="@string/greeting_evening" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/home_title"
+                android:textAppearance="@style/Bento.Text.Display" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_search"
+            style="@style/Bento.IconButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/search"
+            app:icon="@drawable/ic_b_search" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_more"
+            style="@style/Bento.IconButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:contentDescription="@string/more_options"
+            android:visibility="gone"
+            app:icon="@drawable/ic_b_more" />
+    </LinearLayout>
+
+    <!-- Search field, shown by the search button. -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_box"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        app:boxBackgroundColor="?attr/colorSurfaceContainerLowest"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusTopStart="16dp"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="2dp"
+        app:endIconMode="clear_text"
+        app:hintEnabled="false"
+        app:startIconDrawable="@drawable/ic_b_search">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/search_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search_hint"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:textAppearance="@style/Bento.Text.Body" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Hero tile -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/hero"
+        style="@style/Bento.Hero"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="150dp"
+            android:padding="20dp">
+
+            <ImageView
+                android:id="@+id/hero_pages"
+                android:layout_width="76dp"
+                android:layout_height="52dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/bento_hero_pages" />
+
+            <ImageView
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/bento_hero_circle"
+                android:importantForAccessibility="no"
+                android:padding="11dp"
+                android:src="@drawable/ic_b_share"
+                app:tint="@color/bento_onHero" />
+
+            <TextView
+                android:id="@+id/hero_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hero_pages"
+                android:layout_marginTop="14dp"
+                android:text="@string/hero_title"
+                android:textAppearance="@style/Bento.Text.Hero" />
+
+            <TextView
+                android:id="@+id/hero_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hero_title"
+                android:layout_marginTop="4dp"
+                android:text="@string/hero_sub_loading"
+                android:textAppearance="@style/Bento.Text.HeroSub" />
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Filters -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/filter_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:checkedChip="@id/chip_user"
+                app:selectionRequired="true"
+                app:singleLine="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_user"
+                    style="@style/Bento.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_user" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_system"
+                    style="@style/Bento.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_system" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_all"
+                    style="@style/Bento.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_all" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_size"
+                style="@style/Bento.Chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:checkable="true"
+                android:text="@string/sort_largest" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/section_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/section_user"
+            android:textAppearance="@style/Bento.Text.Section" />
+
+        <TextView
+            android:id="@+id/section_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Bento.Text.BodySmall" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/row_single"
+        android:gravity="center"
+        android:padding="28dp"
+        android:text="@string/empty_list"
+        android:textAppearance="@style/Bento.Text.BodySmall"
+        android:visibility="gone" />
+</LinearLayout>

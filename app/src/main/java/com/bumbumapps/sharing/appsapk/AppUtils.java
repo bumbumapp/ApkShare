@@ -1,11 +1,16 @@
 package com.bumbumapps.sharing.appsapk;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
 /** Pure helpers (no Android dependencies) so they can be unit tested. */
 public final class AppUtils {
+
+    /** Which apps the list shows. */
+    public enum Filter { USER, SYSTEM, ALL }
 
     private AppUtils() {
     }
@@ -24,6 +29,48 @@ public final class AppUtils {
             }
         }
         return result;
+    }
+
+    /** Name query + user/system filter + order (by name, or largest APK first). */
+    public static List<App> select(List<App> apps, String query, Filter filter, boolean largestFirst) {
+        List<App> result = new ArrayList<>();
+        for (App app : filterByName(apps, query)) {
+            if (filter == Filter.ALL || (filter == Filter.SYSTEM) == app.isSystem()) {
+                result.add(app);
+            }
+        }
+        Comparator<App> byName = (a, b) -> safe(a.getName()).compareToIgnoreCase(safe(b.getName()));
+        Collections.sort(result, largestFirst
+                ? (a, b) -> a.getApkSize() != b.getApkSize() ? Long.compare(b.getApkSize(), a.getApkSize()) : byName.compare(a, b)
+                : byName);
+        return result;
+    }
+
+    /** Count of apps the user installed (not preinstalled system apps). */
+    public static int countUserApps(List<App> apps) {
+        int n = 0;
+        if (apps != null) {
+            for (App app : apps) {
+                if (!app.isSystem()) {
+                    n++;
+                }
+            }
+        }
+        return n;
+    }
+
+    /** File name for a saved APK: "Name_1.2.3.apk" with characters that file systems reject removed. */
+    public static String apkFileName(String name, String versionName) {
+        String base = safe(name).replaceAll("[\\\\/:*?\"<>|\\p{Cntrl}]", "").trim();
+        if (base.isEmpty()) {
+            base = "app";
+        }
+        String v = safe(versionName).replaceAll("[^A-Za-z0-9._-]", "");
+        return (v.isEmpty() ? base : base + "_" + v) + ".apk";
+    }
+
+    private static String safe(String s) {
+        return s == null ? "" : s;
     }
 
     /**
