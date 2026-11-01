@@ -2,6 +2,7 @@ package com.bumbumapps.sharing.appsapk;
 
 import android.app.Activity;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -31,5 +32,11 @@ public final class BannerHelper {
                 android.view.Gravity.CENTER_HORIZONTAL));
         adView.loadAd(new AdRequest.Builder().build());
         return adView;
+    }
+
+    public static void destroy(View banner) {
+        if (banner instanceof AdView) {
+            ((AdView) banner).destroy();
+        }
     }
 }

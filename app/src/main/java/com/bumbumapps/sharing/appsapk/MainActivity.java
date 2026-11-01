@@ -33,7 +33,6 @@ import androidx.recyclerview.widget.ConcatAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.ads.AdView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -57,7 +56,7 @@ import io.reactivex.schedulers.Schedulers;
 public class MainActivity extends AppCompatActivity {
     private final List<App> apps = new ArrayList<>();
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private AdView adView;
+    private View adView;
     private AppAdapter appAdapter;
     private View header;
     private boolean loaded;
@@ -325,9 +324,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (adView != null) {
-            adView.destroy();
-        }
+        BannerHelper.destroy(adView);
         super.onDestroy();
         compositeDisposable.dispose();
     }
