@@ -12,8 +12,8 @@ if (hmsAdsPropsFile.exists()) hmsAdsPropsFile.withInputStream { hmsAdsProps.load
 def hmsAdId = { String key, String fallback -> ((project.findProperty(key) ?: hmsAdsProps.getProperty(key)) ?: fallback).toString() }
 def HMS_TEST_BANNER_ID = 'testw6vs28auh3'
 def HMS_TEST_INTERSTITIAL_ID = 'testb4znbuh3n2'
-def HMS_BANNER_ID = hmsAdId('HMS_BANNER_ID', HMS_TEST_BANNER_ID)
-def HMS_INTERSTITIAL_ID = hmsAdId('HMS_INTERSTITIAL_ID', HMS_TEST_INTERSTITIAL_ID)
+def HMS_BANNER_ID = hmsAdId('HMS_BANNER_ID', 'q5bder31yf')
+def HMS_INTERSTITIAL_ID = hmsAdId('HMS_INTERSTITIAL_ID', 'e159797l3u')
 
 android {
     namespace 'com.bumbumapps.sharing.appsapk'
