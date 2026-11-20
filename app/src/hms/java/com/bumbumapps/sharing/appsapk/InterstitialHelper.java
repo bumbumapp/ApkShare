@@ -63,7 +63,7 @@ public final class InterstitialHelper {
         }
         InterstitialAd ad = interstitialAd;
         if (ad == null || !ad.isLoaded() || activity == null || activity.isFinishing()
-                || !capAllows(now, lastShownAt, startedAt)) {
+                || !capAllows(now, lastShownAt, startedAt) || PetalSplash.shownRecently()) {
             if (activity != null) {
                 preload(activity);
             }

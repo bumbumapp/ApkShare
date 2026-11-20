@@ -40,6 +40,7 @@ public final class AdsConsent {
         if (onReady != null) {
             onReady.run();
         }
+        PetalSplash.maybeShow(activity, true);
     }
 
     public static boolean canRequestAds(Context context) {

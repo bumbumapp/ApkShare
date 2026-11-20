@@ -14,6 +14,8 @@ def HMS_TEST_BANNER_ID = 'testw6vs28auh3'
 def HMS_TEST_INTERSTITIAL_ID = 'testb4znbuh3n2'
 def HMS_BANNER_ID = hmsAdId('HMS_BANNER_ID', 'q5bder31yf')
 def HMS_INTERSTITIAL_ID = hmsAdId('HMS_INTERSTITIAL_ID', 'e159797l3u')
+def HMS_SPLASH_ID = hmsAdId('HMS_SPLASH_ID', 'q4rsueaoa0')
+def HMS_TEST_SPLASH_ID = 'testq6zq98hecj'
 
 android {
     namespace 'com.bumbumapps.sharing.appsapk'
@@ -23,8 +25,8 @@ android {
         applicationId "com.bumbumapps.sharing.appsapk"
         minSdk 26
         targetSdk 36
-        versionCode 10
-        versionName "5.0.0"
+        versionCode 11
+        versionName "5.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -46,6 +48,8 @@ android {
             dimension 'store'
             resValue 'string', 'hms_banner_id', HMS_BANNER_ID
             resValue 'string', 'hms_interstitial_id', HMS_INTERSTITIAL_ID
+            resValue 'string', 'hms_splash_id', HMS_SPLASH_ID
+            resValue 'string', 'hms_test_splash_id', HMS_TEST_SPLASH_ID
             resValue 'string', 'hms_test_banner_id', HMS_TEST_BANNER_ID
             resValue 'string', 'hms_test_interstitial_id', HMS_TEST_INTERSTITIAL_ID
         }
